@@ -23,13 +23,6 @@ class UserService{
         return  jwt.sign(tokenData,secretKey,{expiresIn:jwt_expire});
     }
 
-    static async checkUserById(userId) {
-        try {
-            return await UserModel.findById(userId);
-        } catch (error) {
-            throw error;
-        }
-    }
     
 }
 

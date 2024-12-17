@@ -1,7 +1,7 @@
-const app=require('./app');
-const db=require('./config/db')
+const app=require('./api/app');
+const db=require('./api/config/db')
 const cors = require('cors');
-const UserModel=require('./model/user_model')
+const UserModel=require('./api/model/user_model')
 
 const port=4001;
 
