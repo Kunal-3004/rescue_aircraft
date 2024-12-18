@@ -4,6 +4,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:rescue_aircraft/screens/forgot_password.dart';
 import 'package:rescue_aircraft/screens/register.dart';
+import 'package:rescue_aircraft/utils/constant.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'home.dart';
 
@@ -30,7 +31,7 @@ class _SignInState extends State<SignIn> {
       return;
     }
 
-    final url = Uri.parse("http://10.0.2.2:4001/login");
+    final url = Uri.parse(Utils.loginUrl);
 
     setState(() {
       _isLoading = true;

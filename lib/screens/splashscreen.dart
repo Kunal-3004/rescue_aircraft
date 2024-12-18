@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:rescue_aircraft/screens/login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'home.dart';
+
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -25,8 +27,7 @@ class _SplashScreenState extends State<SplashScreen> {
         _sharedPreferences.getString('usermail') == null) {
        Navigator.push(context, MaterialPageRoute(builder: (context) => SignIn()));
     } else {
-      // Navigate to Home Screen
-      // Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen()));
+       Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
     }
   }
 

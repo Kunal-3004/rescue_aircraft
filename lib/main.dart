@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rescue_aircraft/screens/home.dart';
 import 'package:rescue_aircraft/screens/login.dart';
 import 'package:rescue_aircraft/screens/splashscreen.dart';
 
@@ -34,7 +35,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: SignIn(),
+      home: SplashScreen(),
     );
   }
 }

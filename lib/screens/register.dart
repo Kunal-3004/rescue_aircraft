@@ -36,7 +36,7 @@ class _SignupState extends State<Signup> {
       return;
     }
 
-    final url = Uri.parse("http://10.0.2.2:4001/registeration");
+    final url = Uri.parse(Utils.registrationUrl);
 
     try {
       final response = await http.post(
