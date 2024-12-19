@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rescue_aircraft/screens/home.dart';
 import 'package:rescue_aircraft/screens/login.dart';
+import 'package:rescue_aircraft/screens/report.dart';
 import 'package:rescue_aircraft/screens/splashscreen.dart';
 
 void main() {
@@ -16,6 +17,11 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
+      initialRoute: '/',
+      routes: {
+        '/home':(context)=>Home(),
+        '/report':(context)=>Report()
+      },
       theme: ThemeData(
         // This is the theme of your application.
         //
