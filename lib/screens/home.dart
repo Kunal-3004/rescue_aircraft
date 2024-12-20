@@ -100,13 +100,13 @@ class _HomeState extends State<Home> {
                   children: [
                     Container(
                       padding: EdgeInsets.all(5),
-                        child: RescueCard(title: "Rescue a missing aircraft", desc:"Fill the last known information about aircraft like coordinates,velocity,altitude,etc", icon: Icons.book,)),
+                        child: RescueCard(title: "Rescue a missing aircraft", desc:"Fill the last known information about aircraft like coordinates,velocity,altitude,etc", icon: Icons.book,icColor: Colors.blueGrey,)),
                     SizedBox(
                       height: 40,
                     ),
                     Container(
                       padding: EdgeInsets.all(5),
-                        child: RescueCard(title: "Identify most suitable search pattern", desc:"Hit and trial available algorithm to sweep the search area to find suitable aircraft", icon: Icons.swap_horizontal_circle,)),
+                        child: RescueCard(title: "Identify most suitable search pattern", desc:"Hit and trial available algorithm to sweep the search area to find suitable aircraft", icon: Icons.swap_horizontal_circle,icColor: Colors.black,)),
                   ],
                 ),
                 SizedBox(
@@ -119,13 +119,13 @@ class _HomeState extends State<Home> {
                     ),
                     Container(
                         padding: EdgeInsets.all(5),
-                        child: RescueCard(title: "Predict the search area", desc:"Identify the probable search area.Get real time information of area for search and rescue strategy", icon: Icons.search,)),
+                        child: RescueCard(title: "Predict the search area", desc:"Identify the probable search area.Get real time information of area for search and rescue strategy", icon: Icons.search,icColor: Colors.black,)),
                     SizedBox(
                       height: 40,
                     ),
                     Container(
                         padding: EdgeInsets.all(5),
-                        child: RescueCard(title: "Get Detailed Analysis", desc:"Get the search and rescue operations results and detailed analysis of information", icon: Icons.bar_chart_rounded,)),
+                        child: RescueCard(title: "Get Detailed Analysis", desc:"Get the search and rescue operations results and detailed analysis of information", icon: Icons.bar_chart_rounded, icColor: Colors.deepOrangeAccent,)),
                   ],
                 )
               ],

@@ -4,7 +4,8 @@ class RescueCard extends StatelessWidget {
   final String title;
   final String desc;
   final IconData icon;
-  const RescueCard({super.key, required this.title, required this.desc, required this.icon});
+  final Color icColor;
+  const RescueCard({super.key, required this.title, required this.desc, required this.icon, required this.icColor});
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +36,7 @@ class RescueCard extends StatelessWidget {
           ),
           Icon(
             icon,
-            color: Colors.black,
+            color: icColor,
             size: 30,
           ),
         ],

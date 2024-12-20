@@ -1,10 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:rescue_aircraft/screens/home.dart';
-import 'package:rescue_aircraft/screens/report.dart';
+import 'package:rescue_aircraft/screens/login.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class HomeDrawer extends StatelessWidget {
   const HomeDrawer({super.key});
 
+
+  void _logout(BuildContext context) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+
+    Fluttertoast.showToast(
+      msg: "Logout Successful",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      backgroundColor: Colors.blue,
+      textColor: Colors.white,
+    );
+
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => SignIn()),
+          (Route<dynamic> route) => false,
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -80,7 +100,7 @@ class HomeDrawer extends StatelessWidget {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Icon(Icons.airplanemode_active_sharp,size: 35,),
+                              Icon(Icons.airplanemode_active_sharp,size: 35,color: Colors.grey[700],),
                               SizedBox(
                                 width: 30,
                               ),
@@ -112,7 +132,7 @@ class HomeDrawer extends StatelessWidget {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Icon(Icons.zoom_in_map,size: 35,),
+                              Icon(Icons.zoom_in_map,size: 35,color: Colors.lightGreen,),
                               SizedBox(
                                 width: 30,
                               ),
@@ -135,7 +155,7 @@ class HomeDrawer extends StatelessWidget {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Icon(Icons.airplanemode_active_sharp,size: 35,),
+                              Icon(Icons.flight_land,size: 35,color: Colors.blueGrey,),
                               SizedBox(
                                 width: 30,
                               ),
@@ -158,7 +178,7 @@ class HomeDrawer extends StatelessWidget {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Icon(Icons.bar_chart_outlined,size: 35,),
+                              Icon(Icons.bar_chart_outlined,size: 35,color: Colors.deepOrangeAccent,),
                               SizedBox(
                                 width: 30,
                               ),
@@ -190,7 +210,7 @@ class HomeDrawer extends StatelessWidget {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Icon(Icons.warning_amber_outlined,size: 35,),
+                              Icon(Icons.warning_amber_outlined,size: 35,color: Colors.red,),
                               SizedBox(
                                 width: 30,
                               ),
@@ -208,12 +228,11 @@ class HomeDrawer extends StatelessWidget {
                         margin: EdgeInsets.only(left: 50),
                         child: GestureDetector(
                           onTap: (){
-
                           },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Icon(Icons.android,size: 35,),
+                              Icon(Icons.android,size: 35,color: Colors.green,),
                               SizedBox(
                                 width: 30,
                               ),
@@ -227,6 +246,29 @@ class HomeDrawer extends StatelessWidget {
                     ],
                   ),
                 ],
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Container(
+                margin: EdgeInsets.only(left: 50),
+                child: GestureDetector(
+                  onTap: (){
+                    _logout(context);
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Icon(Icons.power_settings_new,size: 35,color: Colors.red,),
+                      SizedBox(
+                        width: 30,
+                      ),
+                      Text("Log out",style: TextStyle(
+                        fontSize: 22,color: Colors.black,
+                      ),)
+                    ],
+                  ),
+                ),
               ),
             ],
           ),

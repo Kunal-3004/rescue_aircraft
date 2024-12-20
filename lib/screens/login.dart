@@ -52,6 +52,7 @@ class _SignInState extends State<SignIn> {
       if (response.statusCode == 200) {
         sharedPreferences = await SharedPreferences.getInstance();
         sharedPreferences.setString('token', responseData['token']);
+        sharedPreferences.setBool('isLoggedIn', true);
 
         Fluttertoast.showToast(msg: "Login successful!");
 

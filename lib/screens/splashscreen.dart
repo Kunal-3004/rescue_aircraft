@@ -22,12 +22,12 @@ class _SplashScreenState extends State<SplashScreen> {
 
   void isLogin() async {
     _sharedPreferences = await SharedPreferences.getInstance();
+    bool? isLoggedIn = _sharedPreferences.getBool('isLoggedIn');
 
-    if (_sharedPreferences.getString('userid') == null &&
-        _sharedPreferences.getString('usermail') == null) {
-       Navigator.push(context, MaterialPageRoute(builder: (context) => SignIn()));
-    } else {
+    if (isLoggedIn==true) {
        Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
+    } else {
+       Navigator.push(context, MaterialPageRoute(builder: (context) => SignIn()));
     }
   }
 
