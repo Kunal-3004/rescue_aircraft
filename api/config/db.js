@@ -1,10 +1,10 @@
-const mongoose=require('mongoose');
+const mongoose = require('mongoose');
 
-const connection = mongoose.createConnection('mongodb://127.0.0.1:27017/Rescue').on('open',()=>{
-    console.log('MongoDb Connected');
-}).on('error',()=>{
-    console.log("MongoDb connection error");
-});
+mongoose.connect('mongodb://127.0.0.1:27017/Rescue', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+  .then(() => console.log('MongoDB Connected'))
+  .catch(err => console.error('MongoDB connection error:', err));
 
-
-module.exports = connection;
+module.exports = mongoose;
