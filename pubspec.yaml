@@ -49,6 +49,9 @@ dev_dependencies:
   shared_preferences:
   fluttertoast:
   http:
+  intl:
+  google_maps_flutter:
+  google_places_flutter:
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -64,6 +67,10 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - images/splash.jpg
+    - images/aeroplane_icon.png
+    - images/police-station_marker.png
+    - images/hospital_marker.png
+    - images/crash_marker.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

@@ -1,21 +1,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <!--
-    If you are serving your web app in a path other than the root, change the
-    href value below to reflect the base path you are serving from.
-
-    The path provided below has to start and end with a slash "/" in order for
-    it to work correctly.
-
-    For more details:
-    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
-
-    This is a placeholder for base href that will be replaced by the value of
-    the `--base-href` argument provided to `flutter build`.
-  -->
-  <base href="$FLUTTER_BASE_HREF">
-
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
   <meta name="description" content="A new Flutter project.">
@@ -33,6 +18,34 @@
   <link rel="manifest" href="manifest.json">
 </head>
 <body>
-  <script src="flutter_bootstrap.js" async></script>
+<script src="flutter_bootstrap.js" async></script>
+
+<!-- Google Maps API -->
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AlzaSyXVzb4FFLcTL26dAjdeuoGXu8-dbcUgq_c&callback=initMap">
+</script>
+
+<script>
+  // Define the initMap function to initialize the map after the API is loaded
+  function initMap() {
+    var mapOptions = {
+      center: { lat: -34.397, lng: 150.644 }, // Replace with desired initial position
+      zoom: 8
+    };
+
+    // Initialize the Google Map
+    const map = new google.maps.Map(document.getElementById('map'), mapOptions);
+
+    // Create an AdvancedMarkerElement and add it to the map
+    const advancedMarker = new google.maps.marker.AdvancedMarkerElement({
+      position: { lat: -34.397, lng: 150.644 },
+      map: map,
+      title: "Hello World!"
+    });
+  }
+</script>
+
+<!-- Add a div to display the map -->
+<div id="map" style="height: 500px; width: 100%;"></div>
 </body>
 </html>

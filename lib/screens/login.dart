@@ -5,7 +5,10 @@ import 'package:http/http.dart' as http;
 import 'package:rescue_aircraft/screens/forgot_password.dart';
 import 'package:rescue_aircraft/screens/register.dart';
 import 'package:rescue_aircraft/utils/constant.dart';
+import 'package:rescue_aircraft/widgets/button.dart';
+import 'package:rescue_aircraft/widgets/text.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../widgets/textField.dart';
 import 'home.dart';
 
 class SignIn extends StatefulWidget {
@@ -43,9 +46,6 @@ class _SignInState extends State<SignIn> {
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({'email': email, 'password': password}),
       );
-
-      print("Response status: ${response.statusCode}");
-      print("Response body: ${response.body}");
 
       final responseData = jsonDecode(response.body);
 
@@ -98,14 +98,12 @@ class _SignInState extends State<SignIn> {
             children: [
               Padding(
                 padding: const EdgeInsets.only(left: 30.0),
-                child: Text(
-                  "Hello\nSign in!",
-                  style: TextStyle(
-                    color: Colors.white,
+                child: MyText(
+                    text: "Hello\nSignIn!",
+                    fontColor: Colors.white,
                     fontSize: 40,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+                    fontWeight: FontWeight.bold
+                )
               ),
               SizedBox(height: 40),
               Expanded(
@@ -122,47 +120,27 @@ class _SignInState extends State<SignIn> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Email Field
-                      const Text(
-                        "Email",
-                        style: TextStyle(
-                          color: Color(0xff00bfff),
+                      MyText(
+                          text: "Email",
+                          fontColor: Color(0xff00bfff),
                           fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
+                          fontWeight: FontWeight.bold
                       ),
                       const SizedBox(height: 10),
-                      TextField(
-                        controller: emailController,
-                        decoration: InputDecoration(
-                          filled: true,
-                          fillColor: Colors.grey[100],
+                      MyTextField(
+                          controllerName: emailController,
                           hintText: "Enter Email",
-                          prefixIcon: Icon(
-                            Icons.email_outlined,
-                            size: 25,
-                            color: Colors.blueAccent,
-                          ),
-                          contentPadding: EdgeInsets.symmetric(vertical: 18, horizontal: 20),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide.none,
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(color: Colors.blueAccent, width: 2),
-                          ),
-                        ),
+                          icon: Icons.email_outlined,
+                          fillColor: Colors.grey[100],
+                          iconSize: 25,
+                          iconColor: Colors.blueAccent
                       ),
                       SizedBox(height: 25),
-                      // Password Field
-                      const Text(
-                        "Password",
-                        style: TextStyle(
-                          color: Color(0xff00bfff),
+                      MyText(
+                          text: "Password",
+                          fontColor: Color(0xff00bfff),
                           fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
+                          fontWeight: FontWeight.bold
                       ),
                       const SizedBox(height: 10),
                       TextField(
@@ -219,50 +197,27 @@ class _SignInState extends State<SignIn> {
                         ],
                       ),
                       const SizedBox(height: 70),
-                      // Sign In Button
                       _isLoading
                           ? Center(child: CircularProgressIndicator())
-                          : Container(
-                        height: 60,
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              Color(0xff87ceeb),
-                              Color(0xff00bfff),
-                              Color(0xff4682b4),
-                            ],
-                            begin: Alignment.topLeft,
-                            end: Alignment.topRight,
-                          ),
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        width: MediaQuery.of(context).size.width,
-                        child: Center(
-                          child: TextButton(
-                            onPressed: loginUser,
-                            child: Text(
-                              "SIGN IN",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ),
+                          : MyButton(
+                        name: "SIGN IN",
+                        perform: loginUser,
+                        btnHeight: 60,
+                        btnWidth: MediaQuery.of(context).size.width,
+                        nameColor: Colors.white,
+                        nameSize: 24,
+                        nameWeight: FontWeight.bold,
                       ),
                       SizedBox(height: MediaQuery.of(context).size.height / 6),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Text(
-                            "Don't have an account?",
-                            style: TextStyle(
-                              color: Colors.black54,
+                          MyText(
+                              text:"Don't have an account?",
+                              fontColor: Colors.black45,
                               fontSize: 18,
-                              fontWeight: FontWeight.w500,
-                            ),
+                              fontWeight: FontWeight.w500
                           ),
                           SizedBox(width: 10),
                           GestureDetector(
@@ -270,14 +225,11 @@ class _SignInState extends State<SignIn> {
                               Navigator.push(context,
                                   MaterialPageRoute(builder: (context) => Signup()));
                             },
-                            child: Text(
-                              "SIGN UP",
-                              style: TextStyle(
-                                color: Color.fromARGB(255, 4, 72, 129),
+                            child: MyText(text: "SIGN UP",
+                                fontColor:Color.fromARGB(255, 4, 72, 129),
                                 fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
+                                fontWeight: FontWeight.bold
+                            )
                           ),
                         ],
                       ),

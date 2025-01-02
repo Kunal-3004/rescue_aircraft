@@ -5,6 +5,10 @@ import 'package:rescue_aircraft/screens/home.dart';
 import 'package:rescue_aircraft/screens/login.dart';
 import 'package:http/http.dart' as http;
 import 'package:rescue_aircraft/utils/constant.dart';
+import 'package:rescue_aircraft/widgets/button.dart';
+import 'package:rescue_aircraft/widgets/textField.dart';
+
+import '../widgets/text.dart';
 
 class Signup extends StatefulWidget {
   const Signup({super.key
@@ -88,14 +92,12 @@ class _SignupState extends State<Signup> {
             children: [
               Padding(
                 padding: const EdgeInsets.only(left: 30.0),
-                child: Text(
-                  "Register User",
-                  style: TextStyle(
-                    color: Colors.white,
+                child: MyText(
+                    text: "Register User",
+                    fontColor: Colors.white,
                     fontSize: 40,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+                    fontWeight: FontWeight.bold
+                )
               ),
               SizedBox(
                 height: 30,
@@ -114,188 +116,104 @@ class _SignupState extends State<Signup> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        "Name",
-                        style: TextStyle(
-                          color: Color(0xff00bfff),
+                      MyText(
+                          text: "Name",
+                          fontColor: Color(0xff00bfff),
                           fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
+                          fontWeight: FontWeight.bold
                       ),
                       const SizedBox(
                         height: 7,
                       ),
-                      TextField(
-                        controller: nameController,
-                        decoration: InputDecoration(
-                          filled: true,
-                          fillColor: Colors.grey[100], // Light background
+                      MyTextField(controllerName: nameController,
                           hintText: "Enter Name",
-                          prefixIcon: Icon(
-                            Icons.person_outline,
-                            size: 25,
-                            color: Colors.blueAccent,
-                          ),
-                          contentPadding: EdgeInsets.symmetric(vertical: 18, horizontal: 20),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide.none,
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(color: Colors.blueAccent, width: 2),
-                          ),
-                        ),
+                          icon: Icons.person_outlined,
+                          fillColor: Colors.grey[100],
+                          iconSize: 25,
+                          iconColor: Colors.blueAccent
                       ),
                       const SizedBox(
                         height: 10,
                       ),
-                      const Text(
-                        "Email",
-                        style: TextStyle(
-                          color: Color(0xff00bfff),
+                      MyText(
+                          text: "Email",
+                          fontColor: Color(0xff00bfff),
                           fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
+                          fontWeight: FontWeight.bold
                       ),
                       const SizedBox(
                         height: 7,
                       ),
-                      TextField(
-                        controller: emailController,
-                        decoration: InputDecoration(
-                          filled: true,
-                          fillColor: Colors.grey[100],
+                      MyTextField(
+                          controllerName: emailController,
                           hintText: "Enter Email",
-                          prefixIcon: Icon(
-                            Icons.email_outlined,
-                            size: 25,
-                            color: Colors.blueAccent,
-                          ),
-                          contentPadding: EdgeInsets.symmetric(vertical: 18, horizontal: 20),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide.none,
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(color: Colors.blueAccent, width: 2),
-                          ),
-                        ),
+                          icon: Icons.email_outlined,
+                          fillColor: Colors.grey[100],
+                          iconSize: 25,
+                          iconColor: Colors.blueAccent
                       ),
                       const SizedBox(
                         height: 10,
                       ),
-                      const Text(
-                        "Password",
-                        style: TextStyle(
-                          color: Color(0xff00bfff),
+                      MyText(
+                          text: "Password",
+                          fontColor: Color(0xff00bfff),
                           fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
+                          fontWeight: FontWeight.bold
                       ),
                       const SizedBox(
                         height: 7,
                       ),
-                      TextField(
-                        controller: passwordController,
-                        decoration: InputDecoration(
-                          filled: true,
-                          fillColor: Colors.grey[100],
+                      MyTextField(
+                          controllerName: passwordController,
                           hintText: "Enter Password",
-                          prefixIcon: Icon(
-                            Icons.lock_outlined,
-                            size: 25,
-                            color: Colors.blueAccent,
-                          ),
-                          contentPadding: EdgeInsets.symmetric(vertical: 18, horizontal: 20),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide.none,
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(color: Colors.blueAccent, width: 2),
-                          ),
-                        ),
+                          icon: Icons.lock_outline_rounded,
+                          fillColor: Colors.grey[100],
+                          iconSize: 25,
+                          iconColor: Colors.blueAccent
                       ),
                       const SizedBox(
                         height: 10,
                       ),
-                      const Text(
-                        "Confirm Password",
-                        style: TextStyle(
-                          color: Color(0xff00bfff),
+                      MyText(
+                          text: "Confirm Password",
+                          fontColor: Color(0xff00bfff),
                           fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
+                          fontWeight: FontWeight.bold
                       ),
                       const SizedBox(
                         height: 7,
                       ),
-                      TextField(
-                        controller: confirmPasswordController,
-                        decoration: InputDecoration(
-                          filled: true,
-                          fillColor: Colors.grey[100],
+                      MyTextField(
+                          controllerName: confirmPasswordController,
                           hintText: "Enter Password",
-                          prefixIcon: Icon(
-                            Icons.lock_outlined,
-                            size: 25,
-                            color: Colors.blueAccent,
-                          ),
-                          contentPadding: EdgeInsets.symmetric(vertical: 18, horizontal: 20),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide.none,
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(color: Colors.blueAccent, width: 2),
-                          ),
-                        ),
+                          icon: Icons.lock_outline_rounded,
+                          fillColor: Colors.grey[100],
+                          iconSize: 25,
+                          iconColor: Colors.blueAccent
                       ),
                       const SizedBox(
                         height: 40,
                       ),
-                      Container(
-                        height: 60,
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(colors: [
-                            Color(0xff87ceeb),
-                            Color(0xff00bfff),
-                            Color(0xff4682b4),
-                          ],begin: Alignment.topLeft,end: Alignment.topRight),borderRadius: BorderRadius.circular(30),
-                        ),
-                        width: MediaQuery.of(context).size.width,
-                        child: Center(
-                          child: TextButton(
-                            onPressed: () {
-                              registerUser();
-                            },
-                            child: Text(
-                              "SIGN UP",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ),
+                      MyButton(
+                          name: "SIGN UP",
+                          perform: registerUser,
+                          btnHeight: 60,
+                          btnWidth: MediaQuery.of(context).size.width,
+                          nameColor: Colors.white,
+                          nameSize: 24,
+                          nameWeight: FontWeight.bold
                       ),
                       SizedBox(height: MediaQuery.of(context).size.height/7,),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Text(
-                            "Already have an account?",
-                            style: TextStyle(
-                              color: Colors.black54,
+                          MyText(
+                              text: "Already have an account?",
+                              fontColor: Colors.black45,
                               fontSize: 18,
-                              fontWeight: FontWeight.w500,
-                            ),
+                              fontWeight: FontWeight.w500
                           ),
                           SizedBox(
                             width: 10,
@@ -304,13 +222,11 @@ class _SignupState extends State<Signup> {
                             onTap: () {
                               Navigator.push(context, MaterialPageRoute(builder: (context)=>SignIn()));
                             },
-                            child: Text(
-                              "SIGN IN",
-                              style: TextStyle(
-                                color: Color.fromARGB(255, 4, 72, 129),
+                            child: MyText(
+                                text: "SIGN IN",
+                                fontColor: Color.fromARGB(255, 4, 72, 129),
                                 fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
+                                fontWeight: FontWeight.bold
                             ),
                           ),
                         ],

@@ -1,7 +1,9 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:rescue_aircraft/screens/login.dart';
+import 'package:rescue_aircraft/widgets/button.dart';
+import 'package:rescue_aircraft/widgets/text.dart';
+import 'package:rescue_aircraft/widgets/textField.dart';
 
 class ForgotPassword extends StatefulWidget {
   const ForgotPassword({super.key});
@@ -12,6 +14,10 @@ class ForgotPassword extends StatefulWidget {
 
 class _ForgotPasswordState extends State<ForgotPassword> {
   final TextEditingController emailController=TextEditingController();
+
+  Future<void> sentEmail() async{
+
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,14 +56,12 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                 padding: EdgeInsets.only(left: 60,top: 5),
                 child: Row(
                   children: [
-                    Text(
-                      "FORGOT PASSWORD",
-                      style: TextStyle(
-                        color: Colors.white,
+                    MyText(
+                        text: "FORGOT PASSWORD",
+                        fontColor:Colors.white,
                         fontSize: 26,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                        fontWeight: FontWeight.bold
+                    )
                   ],
                 ),
               ),
@@ -73,6 +77,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                       borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(30),
                         topRight: Radius.circular(30),
+
                       )
                   ),
                   child: Column(
@@ -101,71 +106,34 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                       SizedBox(
                         height: 30,
                       ),
-                      Text("Email",
-                        style: TextStyle(
-                          color: Color(0xff00bfff),
+                      MyText(
+                          text: "Email",
+                          fontColor: Color(0xff00bfff),
                           fontSize: 18,
-                          fontWeight: FontWeight.w500,
-                        ),
+                          fontWeight: FontWeight.w500
                       ),
                       SizedBox(
                         height: 20,
                       ),
-                      TextField(
-                        controller: emailController,
-                        decoration: InputDecoration(
-                          filled: true,
-                          fillColor: Colors.grey[100],
+                      MyTextField(
+                          controllerName: emailController,
                           hintText: "Enter Email",
-                          prefixIcon: Icon(
-                            Icons.email_outlined,
-                            size: 25,
-                            color: Colors.blueAccent,
-                          ),
-                          contentPadding: EdgeInsets.symmetric(vertical: 18, horizontal: 20),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide.none,
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(color: Colors.blueAccent, width: 2),
-                          ),
-                        ),
+                          icon: Icons.email_outlined,
+                          fillColor: Colors.grey[100],
+                          iconSize: 25,
+                          iconColor: Colors.blueAccent
                       ),
                       SizedBox(
                         height: 50,
                       ),
-                      Container(
-                        height: 60,
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              Color(0xff87ceeb),
-                              Color(0xff00bfff),
-                              Color(0xff4682b4),
-                            ],
-                            begin: Alignment.topLeft,
-                            end: Alignment.topRight,
-                          ),
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        width: MediaQuery.of(context).size.width,
-                        child: Center(
-                          child: TextButton(
-                            onPressed: (){
-
-                            },
-                            child: Text(
-                              "SENT",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ),
+                      MyButton(
+                          name: "SENT",
+                          perform: sentEmail,
+                          btnHeight: 60,
+                          btnWidth: MediaQuery.of(context).size.width,
+                          nameColor: Colors.white,
+                          nameSize: 24,
+                          nameWeight: FontWeight.bold
                       ),
                     ],
                   ),

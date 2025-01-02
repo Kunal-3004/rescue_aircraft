@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rescue_aircraft/screens/profile.dart';
 import 'package:rescue_aircraft/screens/report.dart';
+import 'package:rescue_aircraft/widgets/button.dart';
 import 'package:rescue_aircraft/widgets/card.dart';
 import 'package:rescue_aircraft/widgets/drawer.dart';
 
@@ -13,6 +14,10 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  Future<void> navigateToReport() async {
+    Navigator.push(context, MaterialPageRoute(builder: (context)=>Report()));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -100,13 +105,25 @@ class _HomeState extends State<Home> {
                   children: [
                     Container(
                       padding: EdgeInsets.all(5),
-                        child: RescueCard(title: "Rescue a missing aircraft", desc:"Fill the last known information about aircraft like coordinates,velocity,altitude,etc", icon: Icons.book,icColor: Colors.blueGrey,)),
+                        child: RescueCard(
+                          title: "Rescue a missing aircraft",
+                          desc:"Fill the last known information about aircraft like coordinates,velocity,altitude,etc",
+                          icon: Icons.book,
+                          icColor: Colors.blueGrey,
+                        )
+                    ),
                     SizedBox(
                       height: 40,
                     ),
                     Container(
                       padding: EdgeInsets.all(5),
-                        child: RescueCard(title: "Identify most suitable search pattern", desc:"Hit and trial available algorithm to sweep the search area to find suitable aircraft", icon: Icons.swap_horizontal_circle,icColor: Colors.black,)),
+                        child: RescueCard(
+                          title: "Identify most suitable search pattern",
+                          desc:"Hit and trial available algorithm to sweep the search area to find suitable aircraft",
+                          icon: Icons.swap_horizontal_circle,
+                          icColor: Colors.black,
+                        )
+                    ),
                   ],
                 ),
                 SizedBox(
@@ -119,50 +136,41 @@ class _HomeState extends State<Home> {
                     ),
                     Container(
                         padding: EdgeInsets.all(5),
-                        child: RescueCard(title: "Predict the search area", desc:"Identify the probable search area.Get real time information of area for search and rescue strategy", icon: Icons.search,icColor: Colors.black,)),
+                        child: RescueCard(
+                          title: "Predict the search area",
+                          desc:"Identify the probable search area.Get real time information of area for search and rescue strategy",
+                          icon: Icons.search,
+                          icColor: Colors.black,
+                        )
+                    ),
                     SizedBox(
                       height: 40,
                     ),
                     Container(
                         padding: EdgeInsets.all(5),
-                        child: RescueCard(title: "Get Detailed Analysis", desc:"Get the search and rescue operations results and detailed analysis of information", icon: Icons.bar_chart_rounded, icColor: Colors.deepOrangeAccent,)),
+                        child: RescueCard(
+                          title: "Get Detailed Analysis",
+                          desc:"Get the search and rescue operations results and detailed analysis of information",
+                          icon: Icons.bar_chart_rounded,
+                          icColor: Colors.deepOrangeAccent,
+                        )
+                    ),
                   ],
                 )
               ],
             ),
-            Container(
-              margin: EdgeInsets.only(left: 10,right: 10,top: 20),
-              height: 60,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    Color(0xff87ceeb),
-                    Color(0xff00bfff),
-                    Color(0xff4682b4),
-                  ],
-                  begin: Alignment.topLeft,
-                  end: Alignment.topRight,
-                ),
-                borderRadius: BorderRadius.circular(8)
-              ),
-              width: MediaQuery.of(context).size.width,
-              child: Center(
-                child: TextButton(
-                  onPressed: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=>Report()));
-                  },
-                  child: Text(
-                    "Click here to report a missing aircraft",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
+            SizedBox(
+              height: 7,
             ),
+            MyButton(
+                name:"Click here to report a missing aircraft",
+                perform: navigateToReport,
+                btnHeight: 60,
+                btnWidth:MediaQuery.of(context).size.width/1.05,
+                nameColor: Colors.white,
+                nameSize: 20,
+                nameWeight: FontWeight.bold
+            )
           ],
         ),
       ),

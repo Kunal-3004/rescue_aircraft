@@ -36,7 +36,6 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
       body: Stack(
         children: [
-          // Full-screen image
           SizedBox(
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
@@ -45,7 +44,6 @@ class _SplashScreenState extends State<SplashScreen> {
               fit: BoxFit.cover,
             ),
           ),
-          // Text positioned at the bottom
           Align(
             alignment: Alignment.bottomCenter,
             child: Padding(
