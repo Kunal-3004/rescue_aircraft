@@ -37,6 +37,15 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AlzaSyXVzb4FFLcTL26dAjdeuoGXu8-dbcUgq_c"/>
 
+        <meta-data
+            android:name="io.flutter.embedding.android.SurfaceView"
+            android:value="true" />
+        <meta-data
+            android:name="com.google.android.gms.maps.useTextureView"
+            android:value="true" />
+
+
+
     </application>
     <!-- Required to query activities that can process text, see:
          https://developer.android.com/training/package-visibility and

@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:rescue_aircraft/screens/searchArea.dart';
 import 'package:rescue_aircraft/utils/constant.dart';
+import 'package:rescue_aircraft/utils/openSkyUser.dart';
 import 'package:rescue_aircraft/widgets/drawer.dart';
 import '../widgets/aircraftCard.dart';
 class Report extends StatefulWidget {
@@ -18,8 +18,8 @@ class _ReportState extends State<Report> {
   List<dynamic> filteredAircraftData = [];
   TextEditingController searchController = TextEditingController();
 
-  final String username = "kunal_3004";
-  final String password = "kunal.2580";
+  final String username = Data.username;
+  final String password = Data.password;
 
   TextEditingController callsignController = TextEditingController();
   TextEditingController countryController = TextEditingController();
@@ -225,7 +225,6 @@ class _ReportState extends State<Report> {
                     verticalRateController.text,
                     categoryController.text,
                   ];
-
                   Navigator.pop(context);
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -255,7 +254,11 @@ class _ReportState extends State<Report> {
               child: Row(
                 children: [
                   IconButton(
-                    icon: Icon(Icons.menu, color: Colors.black, size: 40),
+                    icon: Icon(
+                        Icons.menu,
+                        color: Colors.black,
+                        size: 40
+                    ),
                     onPressed: () {
                       _scaffoldKey.currentState?.openDrawer();
                     },
@@ -280,9 +283,13 @@ class _ReportState extends State<Report> {
                   ),
                   const SizedBox(width: 8.0),
                   IconButton(
-                    icon: Icon(Icons.add_circle_outline, color: Colors.black, size: 40),
+                    icon: Icon(
+                        Icons.add_circle_outline,
+                        color: Colors.black,
+                        size: 40
+                    ),
                     onPressed: () {
-                      _showAddReportDialog(); // Show the dialog
+                      _showAddReportDialog();
                     },
                   ),
                 ],

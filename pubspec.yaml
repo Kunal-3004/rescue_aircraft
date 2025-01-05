@@ -52,6 +52,7 @@ dev_dependencies:
   intl:
   google_maps_flutter:
   google_places_flutter:
+  provider:
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

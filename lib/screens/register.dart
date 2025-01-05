@@ -1,10 +1,13 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
+import 'package:rescue_aircraft/providers/auth_provider.dart';
 import 'package:rescue_aircraft/screens/home.dart';
 import 'package:rescue_aircraft/screens/login.dart';
 import 'package:http/http.dart' as http;
 import 'package:rescue_aircraft/utils/constant.dart';
+import 'package:rescue_aircraft/utils/gradient.dart';
 import 'package:rescue_aircraft/widgets/button.dart';
 import 'package:rescue_aircraft/widgets/textField.dart';
 
@@ -24,55 +27,9 @@ class _SignupState extends State<Signup> {
   final TextEditingController passwordController=TextEditingController();
   final TextEditingController confirmPasswordController=TextEditingController();
 
-  Future<void> registerUser() async {
-    final String name = nameController.text.trim();
-    final String email = emailController.text.trim();
-    final String password = passwordController.text.trim();
-    final String confirmPassword = confirmPasswordController.text.trim();
-
-    if (name.isEmpty || email.isEmpty || password.isEmpty || confirmPassword.isEmpty) {
-      Fluttertoast.showToast(msg: "All fields are required.");
-      return;
-    }
-
-    if (password != confirmPassword) {
-      Fluttertoast.showToast(msg: "Passwords do not match.");
-      return;
-    }
-
-    final url = Uri.parse(Utils.registrationUrl);
-
-    try {
-      final response = await http.post(
-        url,
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
-          'name': name,
-          'email': email,
-          'password': password,
-        }),
-      );
-
-      print("Response status: ${response.statusCode}");
-      print("Response body: ${response.body}");
-
-      final responseData = jsonDecode(response.body);
-
-      if (response.statusCode == 201 || response.statusCode == 200) {
-        Fluttertoast.showToast(msg: responseData['Success'] ?? 'Registration successful.');
-        Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
-      } else {
-        Fluttertoast.showToast(msg: responseData['error'] ?? 'Registration failed.');
-      }
-    } catch (e) {
-      print("Error: $e");
-      Fluttertoast.showToast(msg: 'Something went wrong. Please try again.');
-    }
-  }
-
-
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context);
     return Scaffold(
       resizeToAvoidBottomInset: true,
       body: SingleChildScrollView(
@@ -81,11 +38,7 @@ class _SignupState extends State<Signup> {
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
           decoration: BoxDecoration(
-            gradient: LinearGradient(colors: [
-              Color(0xff87ceeb),
-              Color(0xff00bfff),
-              Color(0xff4682b4),
-            ],begin: Alignment.topLeft,end: Alignment.topRight),
+            gradient:kBlueGradient
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -197,7 +150,32 @@ class _SignupState extends State<Signup> {
                       ),
                       MyButton(
                           name: "SIGN UP",
-                          perform: registerUser,
+                          perform: () async {
+                            final String name = nameController.text.trim();
+                            final String email = emailController.text.trim();
+                            final String password = passwordController.text.trim();
+                            final String confirmPassword = confirmPasswordController.text.trim();
+
+                            if (name.isEmpty || email.isEmpty || password.isEmpty || confirmPassword.isEmpty) {
+                              Fluttertoast.showToast(msg: "All fields are required.");
+                              return;
+                            }
+
+                            if (password != confirmPassword) {
+                              Fluttertoast.showToast(msg: "Passwords do not match.");
+                              return;
+                            }
+
+                            bool isSuccess = await authProvider.register(name, email, password);
+
+                            if (isSuccess) {
+                              Fluttertoast.showToast(msg: "Registration successful!");
+                              Navigator.pushReplacement(
+                                  context, MaterialPageRoute(builder: (context) => Home()));
+                            } else {
+                              Fluttertoast.showToast(msg: authProvider.errorMessage);
+                            }
+                          },
                           btnHeight: 60,
                           btnWidth: MediaQuery.of(context).size.width,
                           nameColor: Colors.white,

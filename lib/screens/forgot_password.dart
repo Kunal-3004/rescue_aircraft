@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:rescue_aircraft/screens/login.dart';
+import 'package:rescue_aircraft/utils/gradient.dart';
 import 'package:rescue_aircraft/widgets/button.dart';
 import 'package:rescue_aircraft/widgets/text.dart';
 import 'package:rescue_aircraft/widgets/textField.dart';
@@ -28,11 +29,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
           decoration: BoxDecoration(
-            gradient: LinearGradient(colors: [
-              Color(0xff87ceeb),
-              Color(0xff00bfff),
-              Color(0xff4682b4),
-            ],begin: Alignment.topLeft,end: Alignment.topRight),
+            gradient: kBlueGradient
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

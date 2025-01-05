@@ -1,13 +1,12 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 import 'package:rescue_aircraft/screens/forgot_password.dart';
 import 'package:rescue_aircraft/screens/register.dart';
-import 'package:rescue_aircraft/utils/constant.dart';
+import 'package:rescue_aircraft/providers/auth_provider.dart';
+import 'package:rescue_aircraft/utils/gradient.dart';
 import 'package:rescue_aircraft/widgets/button.dart';
 import 'package:rescue_aircraft/widgets/text.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../widgets/textField.dart';
 import 'home.dart';
 
@@ -21,60 +20,12 @@ class SignIn extends StatefulWidget {
 class _SignInState extends State<SignIn> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  late SharedPreferences sharedPreferences;
   bool _isPasswordVisible = false;
-  bool _isLoading = false;
 
-  Future<void> loginUser() async {
-    final String email = emailController.text.trim();
-    final String password = passwordController.text.trim();
-
-    if (email.isEmpty || password.isEmpty) {
-      Fluttertoast.showToast(msg: "Please fill in all fields.");
-      return;
-    }
-
-    final url = Uri.parse(Utils.loginUrl);
-
-    setState(() {
-      _isLoading = true;
-    });
-
-    try {
-      final response = await http.post(
-        url,
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({'email': email, 'password': password}),
-      );
-
-      final responseData = jsonDecode(response.body);
-
-      if (response.statusCode == 200) {
-        sharedPreferences = await SharedPreferences.getInstance();
-        sharedPreferences.setString('token', responseData['token']);
-        sharedPreferences.setBool('isLoggedIn', true);
-
-        Fluttertoast.showToast(msg: "Login successful!");
-
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => Home()),
-        );
-      } else {
-        Fluttertoast.showToast(msg: responseData['error'] ?? "Login failed.");
-      }
-    } catch (e) {
-      print("Error: $e");
-      Fluttertoast.showToast(msg: "Something went wrong. Please try again.");
-    } finally {
-      setState(() {
-        _isLoading = false;
-      });
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context);
     return Scaffold(
       resizeToAvoidBottomInset: true,
       body: SingleChildScrollView(
@@ -83,15 +34,7 @@ class _SignInState extends State<SignIn> {
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                Color(0xff87ceeb),
-                Color(0xff00bfff),
-                Color(0xff4682b4),
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.topRight,
-            ),
+            gradient: kBlueGradient
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -197,11 +140,25 @@ class _SignInState extends State<SignIn> {
                         ],
                       ),
                       const SizedBox(height: 70),
-                      _isLoading
+                      authProvider.isLoading
                           ? Center(child: CircularProgressIndicator())
                           : MyButton(
                         name: "SIGN IN",
-                        perform: loginUser,
+                        perform: () async{
+                          bool success=await authProvider.login(
+                              emailController.text.trim(),
+                              passwordController.text.trim()
+                          );
+                          if(success){
+                              Fluttertoast.showToast(msg: "Login successful!");
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(builder: (context) => Home()),
+                              );
+                          } else {
+                              Fluttertoast.showToast(msg: "Login failed!");
+                          }
+                        },
                         btnHeight: 60,
                         btnWidth: MediaQuery.of(context).size.width,
                         nameColor: Colors.white,

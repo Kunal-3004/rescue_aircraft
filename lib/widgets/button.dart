@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rescue_aircraft/utils/gradient.dart';
 
 class MyButton extends StatelessWidget {
   final String name;
@@ -15,15 +16,7 @@ class MyButton extends StatelessWidget {
     return Container(
         height: btnHeight,
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Color(0xff87ceeb),
-              Color(0xff00bfff),
-              Color(0xff4682b4),
-            ],
-            begin: Alignment.topLeft,
-            end: Alignment.topRight,
-          ),
+          gradient: kBlueGradient,
           borderRadius: BorderRadius.circular(30),
         ),
         width: btnWidth,

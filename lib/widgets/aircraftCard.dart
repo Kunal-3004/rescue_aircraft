@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rescue_aircraft/widgets/text.dart';
 
 import '../screens/aircraftDetailScreen.dart';
 
@@ -38,7 +39,6 @@ class AircraftCard extends StatelessWidget {
           padding: const EdgeInsets.all(16.0),
           child: Row(
             children: [
-              // Leading Icon
               Container(
                 decoration: BoxDecoration(
                   color: Colors.blueAccent.withOpacity(0.1),
@@ -52,20 +52,15 @@ class AircraftCard extends StatelessWidget {
                 ),
               ),
               SizedBox(width: 16),
-              // Aircraft Information
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      callSign.isNotEmpty ? callSign : "Unknown",
-                      style: TextStyle(
+                    MyText(
+                        text:callSign.isNotEmpty ? callSign : "Unknown",
+                        fontColor: Colors.black87,
                         fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black87,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+                        fontWeight: FontWeight.bold
                     ),
                     SizedBox(height: 4),
                     Text(

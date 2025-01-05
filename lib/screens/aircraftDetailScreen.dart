@@ -6,6 +6,9 @@ import 'package:intl/intl.dart';
 import 'package:rescue_aircraft/screens/report.dart';
 import 'package:rescue_aircraft/screens/searchArea.dart';
 import 'package:rescue_aircraft/utils/constant.dart';
+import 'package:rescue_aircraft/utils/openSkyUser.dart';
+import 'package:rescue_aircraft/widgets/text.dart';
+import '../widgets/aircraftCategory.dart';
 
 class AircraftDetailScreen extends StatefulWidget {
   final String callsign;
@@ -18,8 +21,8 @@ class AircraftDetailScreen extends StatefulWidget {
 class _AircraftDetailScreenState extends State<AircraftDetailScreen> {
   Map<String, dynamic>? details;
   Timer? _timer;
-  final String username = "kunal_3004";
-  final String password = "kunal.2580";
+  final String username = Data.username;
+  final String password = Data.password;
 
   @override
   void initState() {
@@ -106,10 +109,12 @@ class _AircraftDetailScreenState extends State<AircraftDetailScreen> {
               Column(
                 children: [
                   SizedBox(height: 100),
-                  Text(
-                    "Airplane Detail",
-                    style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 32),
-                  ),
+                  MyText(
+                      text: "Airplane Detail",
+                      fontColor: Colors.black,
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold
+                  )
                 ],
               ),
             ],
@@ -129,16 +134,13 @@ class _AircraftDetailScreenState extends State<AircraftDetailScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Title Section
                     Center(
-                      child: Text(
-                        details!['callsign'] ?? "Unknown",
-                        style: TextStyle(
+                      child: MyText(
+                          text: details!['callsign'] ?? "Unknown",
+                          fontColor:Color(0xff00bfff),
                           fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xff00bfff),
-                        ),
-                      ),
+                          fontWeight: FontWeight.bold
+                        )
                     ),
                     SizedBox(height: 16),
                     Divider(thickness: 1.0),
@@ -196,14 +198,12 @@ class _AircraftDetailScreenState extends State<AircraftDetailScreen> {
                   (context)=>SearchArea(aircraftData: aircraftData)
                   ));
                 },
-                child: Text(
-                  "Search aircraft",
-                  style: TextStyle(
-                    color: Colors.white,
+                child:MyText(
+                    text: "Search aircraft",
+                    fontColor: Colors.white,
                     fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+                    fontWeight: FontWeight.bold
+                )
               ),
             ),
           ),
@@ -218,10 +218,12 @@ class _AircraftDetailScreenState extends State<AircraftDetailScreen> {
         children: [
           Expanded(
             flex: 3,
-            child: Text(
-              label,
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.black87),
-            ),
+            child:MyText(
+                text: label,
+                fontColor: Colors.black87,
+                fontSize: 16,
+                fontWeight: FontWeight.w500
+            )
           ),
           Expanded(
             flex: 4,
@@ -280,55 +282,6 @@ class _AircraftDetailScreenState extends State<AircraftDetailScreen> {
     } else {
       print('Aircraft details not available for crash location calculation');
     }
-  }
-}
-
-String getCategoryName(int category) {
-  switch (category) {
-    case 0:
-      return "No information at all";
-    case 1:
-      return "No ADS-B Emitter Category Information";
-    case 2:
-      return "Light (< 15500 lbs)";
-    case 3:
-      return "Small (15500 to 75000 lbs)";
-    case 4:
-      return "Large (75000 to 300000 lbs)";
-    case 5:
-      return "High Vortex Large (B-757)";
-    case 6:
-      return "Heavy (> 300000 lbs)";
-    case 7:
-      return "High Performance (> 5g acceleration and 400 kts)";
-    case 8:
-      return "Rotorcraft";
-    case 9:
-      return "Glider / sailplane";
-    case 10:
-      return "Lighter-than-air";
-    case 11:
-      return "Parachutist / Skydiver";
-    case 12:
-      return "Ultralight / hang-glider / paraglider";
-    case 13:
-      return "Reserved";
-    case 14:
-      return "Unmanned Aerial Vehicle";
-    case 15:
-      return "Space / Trans-atmospheric vehicle";
-    case 16:
-      return "Surface Vehicle – Emergency Vehicle";
-    case 17:
-      return "Surface Vehicle – Service Vehicle";
-    case 18:
-      return "Point Obstacle (includes tethered balloons)";
-    case 19:
-      return "Cluster Obstacle";
-    case 20:
-      return "Line Obstacle";
-    default:
-      return "Unknown Category";
   }
 }
 

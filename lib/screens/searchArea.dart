@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:rescue_aircraft/utils/constant.dart';
+import 'package:rescue_aircraft/utils/gradient.dart';
+import 'package:rescue_aircraft/widgets/CustomTextWidget.dart';
+import 'package:rescue_aircraft/widgets/text.dart';
 
 class SearchArea extends StatefulWidget {
   final List<List<dynamic>> aircraftData;
@@ -20,6 +23,7 @@ class _SearchAreaState extends State<SearchArea> {
   bool _isCheckedRoad = false;
   bool _isCheckedHospital = false;
   bool _isCheckedOthers = false;
+  Map<String, String> featureProperties = {};
 
   TextEditingController subAreaSide=TextEditingController();
   TextEditingController helperDataRadius=TextEditingController();
@@ -42,7 +46,6 @@ class _SearchAreaState extends State<SearchArea> {
     super.initState();
     _loadAirplaneIcon = _loadIcon();
     _loadCrashIcon=_loadIcon();
-
   }
 
   void _addPolygonAndGrid(Map geoJson, Map filteredGrid) {
@@ -164,27 +167,34 @@ class _SearchAreaState extends State<SearchArea> {
       headers: {'Content-Type': 'application/json'},
     );
 
-    print("Response Status: ${response.statusCode}");
-    print("Response Body: ${response.body}");
-
-    print("Center: ${center.latitude}, ${center.longitude}");
-    print("Side: $side, Direction: $direction, CellSize: $cellSize");
-
-
     if (response.statusCode == 200) {
-      var result = json.decode(response.body);
-      double someValue = result['someKey'] is int
-          ? (result['someKey'] as int).toDouble()
-          : result['someKey'] is double
-          ? result['someKey']
-          : 0.0;
-      print("Fetched GeoJSON: $result");
-      return result;
+      final result = json.decode(response.body);
+
+      final List features = result['geojson']['features'];
+      final Map<String, String> featureProperties = {};
+
+      for (var feature in features) {
+        final properties = feature['properties'];
+        if (properties != null) {
+          featureProperties['Area'] = properties['area'] ?? 'N/A';
+          featureProperties['Type'] = properties['type'] ?? 'N/A';
+          featureProperties['Shape'] = properties['shape'] ?? 'N/A';
+          featureProperties['Description'] = properties['description'] ?? 'N/A';
+          featureProperties['Crash Point'] = properties['crashPoint'] ?? 'N/A';
+        }
+      }
+
+      return {
+        'geojson': result['geojson'],
+        'filteredGrid': result['filteredGrid'],
+        'featureProperties': featureProperties,
+      };
     } else {
       throw Exception('Failed to fetch calculated area');
     }
   }
-  Future<Map<String, dynamic>> fetchCalculatedCircularArea(
+
+  Future<Map<String, dynamic>> fetchCalculatedCircleArea(
       LatLng center, double side, double direction, double cellSize) async {
     final response = await http.post(
       Uri.parse(Utils.calCircleApi),
@@ -197,22 +207,28 @@ class _SearchAreaState extends State<SearchArea> {
       headers: {'Content-Type': 'application/json'},
     );
 
-    print("Response Status: ${response.statusCode}");
-    print("Response Body: ${response.body}");
-
-    print("Center: ${center.latitude}, ${center.longitude}");
-    print("Side: $side, Direction: $direction, CellSize: $cellSize");
-
-
     if (response.statusCode == 200) {
-      var result = json.decode(response.body);
-      double someValue = result['someKey'] is int
-          ? (result['someKey'] as int).toDouble()
-          : result['someKey'] is double
-          ? result['someKey']
-          : 0.0;
-      print("Fetched GeoJSON: $result");
-      return result;
+      final result = json.decode(response.body);
+
+      final List features = result['geojson']['features'];
+      final Map<String, String> featureProperties = {};
+
+      for (var feature in features) {
+        final properties = feature['properties'];
+        if (properties != null) {
+          featureProperties['Area'] = properties['area'] ?? 'N/A';
+          featureProperties['Type'] = properties['type'] ?? 'N/A';
+          featureProperties['Shape'] = properties['shape'] ?? 'N/A';
+          featureProperties['Description'] = properties['description'] ?? 'N/A';
+          featureProperties['Crash Point'] = properties['crashPoint'] ?? 'N/A';
+        }
+      }
+
+      return {
+        'geojson': result['geojson'],
+        'filteredGrid': result['filteredGrid'],
+        'featureProperties': featureProperties,
+      };
     } else {
       throw Exception('Failed to fetch calculated area');
     }
@@ -248,7 +264,7 @@ class _SearchAreaState extends State<SearchArea> {
           );
           BitmapDescriptor markerIcon;
 
-          if (type == 'police_station' && _isCheckedRoad) {
+          if (type == 'highways' && _isCheckedRoad) {
             markerIcon = policeStationIcon;
             _markers.add(
               Marker(
@@ -330,13 +346,11 @@ class _SearchAreaState extends State<SearchArea> {
                             padding: const EdgeInsets.symmetric(horizontal: 16.0),
                             child: Align(
                               alignment: Alignment.centerLeft,
-                              child: Text(
-                                "Select map type",
-                                style: TextStyle(
-                                  color: Colors.black,
+                              child: MyText(
+                                  text: "Select map type",
+                                  fontColor: Colors.black,
                                   fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                  fontWeight: FontWeight.bold
                               ),
                             ),
                           ),
@@ -386,13 +400,11 @@ class _SearchAreaState extends State<SearchArea> {
                             padding: const EdgeInsets.symmetric(horizontal: 16.0),
                             child: Align(
                               alignment: Alignment.centerLeft,
-                              child: Text(
-                                "Select search area type",
-                                style: TextStyle(
-                                  color: Colors.black,
+                              child: MyText(
+                                  text: "Select search area type",
+                                  fontColor: Colors.black,
                                   fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                  fontWeight: FontWeight.bold
                               ),
                             ),
                           ),
@@ -432,13 +444,11 @@ class _SearchAreaState extends State<SearchArea> {
                             padding: const EdgeInsets.symmetric(horizontal: 16.0),
                             child: Align(
                               alignment: Alignment.centerLeft,
-                              child: Text(
-                                "Load additional information",
-                                style: TextStyle(
-                                  color: Colors.black,
+                              child: MyText(
+                                  text: "Load additional information",
+                                  fontColor: Colors.black,
                                   fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                  fontWeight: FontWeight.bold
                               ),
                             ),
                           ),
@@ -457,7 +467,7 @@ class _SearchAreaState extends State<SearchArea> {
                                           if (_isCheckedRoad) {
                                             fetchNearbyPlaces(
                                               LatLng(crashLatitude, crashLongitude),
-                                              'police_station',
+                                              'highways',
                                             );
                                           } else {
                                             _markers.removeWhere((marker) =>
@@ -468,7 +478,7 @@ class _SearchAreaState extends State<SearchArea> {
                                       },
                                     ),
                                     const Text(
-                                      'Police Station',
+                                      'Highways',
                                       style: TextStyle(fontSize: 16),
                                     ),
                                   ],
@@ -525,44 +535,26 @@ class _SearchAreaState extends State<SearchArea> {
                             padding: const EdgeInsets.symmetric(horizontal: 16.0),
                             child: Align(
                               alignment: Alignment.centerLeft,
-                              child: Text(
-                                "Helper Data Radius(Km)",
-                                style: TextStyle(
-                                  color: Colors.black,
+                              child: MyText(
+                                  text: "Helper Data Radius(Km)",
+                                  fontColor: Colors.black,
                                   fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                  fontWeight: FontWeight.bold
                               ),
                             ),
                           ),
                           SizedBox(
                             height: 5,
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 10.0, right: 10),
-                            child: TextField(
+                          CustomTextField(
                               controller: helperDataRadius,
-                              decoration: InputDecoration(
-                                fillColor: Colors.white,
-                                hintText: '20',
-                                prefixIcon: Icon(
-                                  Icons.pie_chart,
-                                  size: 25,
-                                  color: Colors.blueAccent,
-                                ),
-                                contentPadding: EdgeInsets.symmetric(
-                                    vertical: 14, horizontal: 20),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                  borderSide: BorderSide(color: Colors.black, width: 2),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                  borderSide: BorderSide(
-                                      color: Colors.blueAccent, width: 2),
-                                ),
-                              ),
-                            ),
+                              enabled: true,
+                              hintText: '20',
+                              prefixIcon: Icon(
+                                Icons.pie_chart,
+                                size: 25,
+                                color: Colors.blueAccent,
+                              )
                           ),
                           SizedBox(
                             height: 10,
@@ -571,44 +563,25 @@ class _SearchAreaState extends State<SearchArea> {
                             padding: const EdgeInsets.symmetric(horizontal: 16.0),
                             child: Align(
                               alignment: Alignment.centerLeft,
-                              child: Text(
-                                "Search Area Buffer(Km)",
-                                style: TextStyle(
-                                  color: Colors.black,
+                              child: MyText(
+                                  text: "Search Area Buffer(Km)",
+                                  fontColor: Colors.black,
                                   fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                  fontWeight: FontWeight.bold
                               ),
                             ),
                           ),
                           SizedBox(
                             height: 5,
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 10.0, right: 10),
-                            child: TextField(
+                          CustomTextField(
                               controller: SearchAreaBuffer,
-                              decoration: InputDecoration(
-                                fillColor: Colors.white,
-                                hintText: '20',
-                                prefixIcon: Icon(
-                                  Icons.share_location,
-                                  size: 25,
-                                  color: Colors.blueAccent,
-                                ),
-                                contentPadding: EdgeInsets.symmetric(
-                                    vertical: 14, horizontal: 20),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                  borderSide: BorderSide(color: Colors.black, width: 2),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                  borderSide: BorderSide(
-                                      color: Colors.blueAccent, width: 2),
-                                ),
-                              ),
-                            ),
+                              hintText: '20',
+                              prefixIcon:Icon(
+                                Icons.share_location,
+                                size: 25,
+                                color: Colors.blueAccent,
+                              )
                           ),
                           SizedBox(
                             height: 10,
@@ -617,43 +590,24 @@ class _SearchAreaState extends State<SearchArea> {
                             padding: const EdgeInsets.symmetric(horizontal: 16.0),
                             child: Align(
                               alignment: Alignment.centerLeft,
-                              child: Text(
-                                "Subarea Side(Km)",
-                                style: TextStyle(
-                                  color: Colors.black,
+                              child: MyText(
+                                  text: "Subarea Side(Km)",
+                                  fontColor: Colors.black,
                                   fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                  fontWeight: FontWeight.bold
                               ),
                             ),
                           ),
                           SizedBox(
                             height: 5,
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 10.0, right: 10),
-                            child: TextField(
-                              controller: subAreaSide,
-                              decoration: InputDecoration(
-                                fillColor: Colors.white,
-                                hintText: '20',
-                                prefixIcon: Icon(
-                                  Icons.multiple_stop_outlined,
-                                  size: 25,
-                                  color: Colors.blueAccent,
-                                ),
-                                contentPadding: EdgeInsets.symmetric(
-                                    vertical: 14, horizontal: 20),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                  borderSide: BorderSide(color: Colors.black, width: 2),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                  borderSide: BorderSide(
-                                      color: Colors.blueAccent, width: 2),
-                                ),
-                              ),
+                          CustomTextField(
+                            controller: subAreaSide,
+                            hintText: '10',
+                            prefixIcon: Icon(
+                              Icons.multiple_stop_outlined,
+                              size: 25,
+                              color: Colors.blueAccent,
                             ),
                           ),
                           SizedBox(
@@ -673,9 +627,12 @@ class _SearchAreaState extends State<SearchArea> {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Center(
-                                    child: Text("Crash Area Information",style: TextStyle(
-                                      fontSize: 22,fontWeight: FontWeight.w500,
-                                    ),),
+                                    child: MyText(
+                                        text: "Crash Area Information",
+                                        fontColor: Colors.black,
+                                        fontSize: 22,
+                                        fontWeight: FontWeight.w500
+                                    ),
                                   ),
                                   SizedBox(
                                     height: 16,
@@ -684,13 +641,11 @@ class _SearchAreaState extends State<SearchArea> {
                                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                                     child: Align(
                                       alignment: Alignment.centerLeft,
-                                      child: Text(
-                                        "Type",
-                                        style: TextStyle(
-                                          color: Colors.black,
+                                      child: MyText(
+                                          text: "Type",
+                                          fontColor: Colors.black,
                                           fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                                          fontWeight: FontWeight.bold
                                       ),
                                     ),
                                   ),
@@ -700,8 +655,9 @@ class _SearchAreaState extends State<SearchArea> {
                                   Padding(
                                     padding: const EdgeInsets.only(left: 8.0, right: 8),
                                     child: TextField(
+                                      controller: TextEditingController(text: featureProperties['Type']),
                                       decoration: InputDecoration(
-                                        fillColor: Colors.white,
+                                        fillColor: Colors.black,
                                         hintText: 'Land',
                                         enabled: false,
                                         prefixIcon: Icon(
@@ -730,13 +686,11 @@ class _SearchAreaState extends State<SearchArea> {
                                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                                     child: Align(
                                       alignment: Alignment.centerLeft,
-                                      child: Text(
-                                        "Area",
-                                        style: TextStyle(
-                                          color: Colors.black,
+                                      child: MyText(
+                                          text: "Area",
+                                          fontColor: Colors.black,
                                           fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                                          fontWeight: FontWeight.bold
                                       ),
                                     ),
                                   ),
@@ -746,9 +700,10 @@ class _SearchAreaState extends State<SearchArea> {
                                   Padding(
                                     padding: const EdgeInsets.only(left: 8.0, right: 8),
                                     child: TextField(
+                                      controller: TextEditingController(text: featureProperties['Area']),
                                       decoration: InputDecoration(
-                                        fillColor: Colors.white,
-                                        hintText: '273 sq m',
+                                        fillColor: Colors.black,
+                                        hintText: '273 sq km',
                                         enabled: false,
                                         prefixIcon: Icon(
                                           Icons.architecture_outlined,
@@ -776,13 +731,11 @@ class _SearchAreaState extends State<SearchArea> {
                                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                                     child: Align(
                                       alignment: Alignment.centerLeft,
-                                      child: Text(
-                                        "Shape",
-                                        style: TextStyle(
-                                          color: Colors.black,
+                                      child: MyText(
+                                          text: "Shape",
+                                          fontColor: Colors.black,
                                           fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                                          fontWeight: FontWeight.bold
                                       ),
                                     ),
                                   ),
@@ -792,8 +745,9 @@ class _SearchAreaState extends State<SearchArea> {
                                   Padding(
                                     padding: const EdgeInsets.only(left: 8.0, right: 8),
                                     child: TextField(
+                                      controller: TextEditingController(text: featureProperties['Shape']),
                                       decoration: InputDecoration(
-                                        fillColor: Colors.white,
+                                        fillColor: Colors.black,
                                         hintText: 'Rectangle',
                                         enabled: false,
                                         prefixIcon: Icon(
@@ -822,13 +776,11 @@ class _SearchAreaState extends State<SearchArea> {
                                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                                     child: Align(
                                       alignment: Alignment.centerLeft,
-                                      child: Text(
-                                        "Description",
-                                        style: TextStyle(
-                                          color: Colors.black,
+                                      child: MyText(
+                                          text: "Description",
+                                          fontColor: Colors.black,
                                           fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                                          fontWeight: FontWeight.bold
                                       ),
                                     ),
                                   ),
@@ -838,8 +790,9 @@ class _SearchAreaState extends State<SearchArea> {
                                   Padding(
                                     padding: const EdgeInsets.only(left: 8.0, right: 8),
                                     child: TextField(
+                                      controller: TextEditingController(text: featureProperties['Description']),
                                       decoration: InputDecoration(
-                                        fillColor: Colors.white,
+                                        fillColor: Colors.black,
                                         enabled: false,
                                         hintText: 'This is dangerous.',
                                         prefixIcon: Icon(
@@ -868,13 +821,11 @@ class _SearchAreaState extends State<SearchArea> {
                                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                                     child: Align(
                                       alignment: Alignment.centerLeft,
-                                      child: Text(
-                                        "Crash Point",
-                                        style: TextStyle(
-                                          color: Colors.black,
+                                      child: MyText(
+                                          text: "Crash Point",
+                                          fontColor: Colors.black,
                                           fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                                          fontWeight: FontWeight.bold
                                       ),
                                     ),
                                   ),
@@ -884,8 +835,9 @@ class _SearchAreaState extends State<SearchArea> {
                                   Padding(
                                     padding: const EdgeInsets.only(left: 8.0, right: 8),
                                     child: TextField(
+                                      controller: TextEditingController(text: featureProperties['Crash Point']),
                                       decoration: InputDecoration(
-                                        fillColor: Colors.white,
+                                        fillColor: Colors.black,
                                         enabled: false,
                                         hintText: '24,78.3',
                                         prefixIcon: Icon(
@@ -917,67 +869,63 @@ class _SearchAreaState extends State<SearchArea> {
                           SizedBox(
                             height: 40,
                           ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Container(
-                    height: 50,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          Color(0xff87ceeb),
-                          Color(0xff00bfff),
-                          Color(0xff4682b4),
-                        ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.topRight,
-                      ),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    width: MediaQuery.of(context).size.width/2.2,
-                    child: Center(
-                      child: TextButton(
-                        onPressed: () {
-                          final aircraft = widget.aircraftData[0];
-                          Map crashLocation = aircraft[11];
-                          double crashLatitude = _parseToDouble(crashLocation['latitude']);
-                          double crashLongitude = _parseToDouble(crashLocation['longitude']);
-                          double heading = double.tryParse(aircraft[8]?.toString() ?? '0') ?? 0.0;
+                          Container(
+                            height: 50,
+                            decoration: BoxDecoration(
+                              gradient: kBlueGradient,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            width: MediaQuery.of(context).size.width/2.2,
+                            child: Center(
+                              child: TextButton(
+                                onPressed: () {
+                                  final aircraft = widget.aircraftData[0];
+                                  Map crashLocation = aircraft[11];
+                                  double crashLatitude = _parseToDouble(crashLocation['latitude']);
+                                  double crashLongitude = _parseToDouble(crashLocation['longitude']);
+                                  double heading = double.tryParse(aircraft[8]?.toString() ?? '0') ?? 0.0;
 
-                          double side = calculateEffectiveRadius(helperDataRadius.text.trim(), SearchAreaBuffer.text.trim());
-                          double direction = heading;
-                          double cellSize = double.tryParse(subAreaSide.text.trim()) ?? 0.0;
-                          LatLng center = LatLng(crashLatitude,crashLongitude);
+                                  double side = calculateEffectiveRadius(helperDataRadius.text.trim(), SearchAreaBuffer.text.trim());
+                                  double direction = heading;
+                                  double cellSize = double.tryParse(subAreaSide.text.trim()) ?? 0.0;
+                                  LatLng center = LatLng(crashLatitude,crashLongitude);
 
-                          if(_selectedItem=="Rectangle"){
-                            fetchCalculatedArea(center, side, direction, cellSize).then((result) {
-                              _addPolygonAndGrid(result['geojson'], result['filteredGrid']);
-                            }).catchError((error) {
-                              print("Error fetching area: $error");
-                            });
-                          }
-                          if(_selectedItem=="Circular"){
-                            fetchCalculatedCircularArea(center, side, direction, cellSize).then((result) {
-                              _addPolygonAndGrid(result['geojson'], result['filteredGrid']);
-                            }).catchError((error) {
-                              print("Error fetching area: $error");
-                            });
-                          }
-                        },
-                        child: Text(
-                          "Find Area",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
+                                  if(_selectedItem=="Rectangle"){
+                                    fetchCalculatedArea(center, side, direction, cellSize).then((result) {
+                                      _addPolygonAndGrid(result['geojson'], result['filteredGrid']);
+                                      setState(() {
+                                        featureProperties = result['featureProperties'];
+                                      });
+                                    }).catchError((error) {
+                                      print("Error fetching area: $error");
+                                    });
+                                  }
+                                  if(_selectedItem=="Circular"){
+                                    fetchCalculatedCircleArea(center, side, direction, cellSize).then((result) {
+                                      _addPolygonAndGrid(result['geojson'], result['filteredGrid']);
+                                      setState(() {
+                                        featureProperties=result['featureProperties'];
+                                      });
+                                    }).catchError((error) {
+                                      print("Error fetching area: $error");
+                                    });
+                                  }
+                                },
+                                child: MyText(
+                                    text: "Find Area",
+                                    fontColor: Colors.white,
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold
+                                ),
+                              ),
+                            ),
                           ),
-                        ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                        ],
                       ),
                     ),
-                  ),
-                  SizedBox(
-                    height: 10,
                   ),
                 ],
               );
