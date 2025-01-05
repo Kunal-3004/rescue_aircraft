@@ -5,6 +5,6 @@ const userRouter=require('./routers/user_router');
 const app=express();
 
 app.use(body_parser.json());
-app.use('/',userRouter);
+app.use('/api',userRouter);
 
 module.exports=app;
