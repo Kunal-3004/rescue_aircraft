@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
           '/home': (context) => Home(),
           '/report': (context) => Report(),
         },
-        home: SignIn(),
+        home:Report(),
       ),
     );
   }

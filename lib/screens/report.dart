@@ -226,6 +226,7 @@ class _ReportState extends State<Report> {
                     categoryController.text,
                   ];
                   Navigator.pop(context);
+
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text("Please fill in all fields")),

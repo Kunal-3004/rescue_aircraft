@@ -30,7 +30,7 @@ class _SearchAreaState extends State<SearchArea> {
   TextEditingController SearchAreaBuffer=TextEditingController();
 
   final List<String> _areaType = ["Rectangle", "Circular", "Accurate"];
-  final String googleApiKey = "AlzaSyXVzb4FFLcTL26dAjdeuoGXu8-dbcUgq_c";
+  final String googleApiKey = "f17738a0a31f4bffbe938d304c5f253e";
 
   late BitmapDescriptor airplaneIcon;
   late BitmapDescriptor policeStationIcon;
@@ -244,59 +244,73 @@ class _SearchAreaState extends State<SearchArea> {
 
   Future<void> fetchNearbyPlaces(LatLng location, String type) async {
     final url =
-        'https://maps.gomaps.pro/maps/api/place/nearbysearch/json?location=${location
-        .latitude},${location
-        .longitude}&radius=5000&type=$type&language=en&key=$googleApiKey';
+        'https://api.geoapify.com/v2/places?categories=$type&filter=circle:${location.longitude},${location.latitude},10000&bias=proximity:${location.longitude},${location.latitude}&apiKey=$googleApiKey';
 
-    final response = await http.get(Uri.parse(url));
-    if (response.statusCode == 200) {
-      final data = json.decode(response.body);
-      final List<dynamic> results = data['results'];
+    try {
+      final response = await http.get(Uri.parse(url));
 
-      setState(() {
-        _markers.removeWhere((marker) =>
-            marker.markerId.value.startsWith(type));
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
 
-        for (var place in results) {
-          final LatLng placeLocation = LatLng(
-            place['geometry']['location']['lat'],
-            place['geometry']['location']['lng'],
-          );
-          BitmapDescriptor markerIcon;
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
 
-          if (type == 'highways' && _isCheckedRoad) {
-            markerIcon = policeStationIcon;
-            _markers.add(
-              Marker(
-                markerId: MarkerId("police_${place['place_id']}"),
-                position: placeLocation,
-                infoWindow: InfoWindow(
-                  title: place['name'],
-                  snippet: place['vicinity'],
-                ),
-                icon: markerIcon,
-              ),
-            );
-          } else if (type == 'hospital' && _isCheckedHospital) {
-            markerIcon = hospitalIcon;
-            _markers.add(
-              Marker(
-                markerId: MarkerId("hospital_${place['place_id']}"),
-                position: placeLocation,
-                infoWindow: InfoWindow(
-                  title: place['name'],
-                  snippet: place['vicinity'],
-                ),
-                icon: markerIcon,
-              ),
-            );
-          }
+        if (data.containsKey('features') && data['features'] is List) {
+          final List<dynamic> results = data['features'];
+
+          setState(() {
+            _markers.removeWhere(
+                    (marker) => marker.markerId.value.startsWith(type));
+
+            for (var place in results) {
+              final properties = place['properties'];
+              final List<dynamic> coordinates = place['geometry']['coordinates'];
+
+              final LatLng placeLocation =
+              LatLng(coordinates[1], coordinates[0]);
+
+              BitmapDescriptor markerIcon;
+
+              if (type == 'healthcare.hospital' && _isCheckedHospital) {
+                markerIcon = hospitalIcon;
+                _markers.add(
+                  Marker(
+                    markerId: MarkerId("hospital_${properties['place_id']}"),
+                    position: placeLocation,
+                    infoWindow: InfoWindow(
+                      title: properties['name'],
+                      snippet: properties['formatted'],
+                    ),
+                    icon: markerIcon,
+                  ),
+                );
+              } else if (type == 'highway' && _isCheckedRoad) {
+                markerIcon = policeStationIcon;
+                _markers.add(
+                  Marker(
+                    markerId: MarkerId("road_${properties['place_id']}"),
+                    position: placeLocation,
+                    infoWindow: InfoWindow(
+                      title: properties['name'],
+                      snippet: properties['formatted'],
+                    ),
+                    icon: markerIcon,
+                  ),
+                );
+              }
+            }
+          });
+        } else {
+          print('No "features" field in the response or it is invalid.');
         }
-      });
-    } else {
-      print('Failed to fetch nearby places');
+      } else {
+        print('Failed to fetch nearby places: ${response.reasonPhrase}');
+      }
+    } catch (e) {
+      print('Error fetching nearby places: $e');
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -467,7 +481,7 @@ class _SearchAreaState extends State<SearchArea> {
                                           if (_isCheckedRoad) {
                                             fetchNearbyPlaces(
                                               LatLng(crashLatitude, crashLongitude),
-                                              'highways',
+                                              'highway',
                                             );
                                           } else {
                                             _markers.removeWhere((marker) =>
@@ -493,7 +507,7 @@ class _SearchAreaState extends State<SearchArea> {
                                           if (_isCheckedHospital) {
                                             fetchNearbyPlaces(
                                               LatLng(crashLatitude, crashLongitude),
-                                              'hospital',
+                                              'healthcare.hospital',
                                             );
                                           } else {
                                             _markers.removeWhere((marker) =>

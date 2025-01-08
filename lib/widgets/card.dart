@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rescue_aircraft/widgets/text.dart';
 
 class RescueCard extends StatelessWidget {
   final String title;
@@ -20,16 +21,20 @@ class RescueCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text(
-            title,
-            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 14),
+          MyText(
+              text: title,
+              fontColor: Colors.black,
+              fontSize: 14,
+              fontWeight: FontWeight.bold
           ),
           SizedBox(
             height: 4,
           ),
-          Text(
-            desc,
-            style: TextStyle(color: Colors.grey, fontWeight: FontWeight.w500, fontSize: 12),
+          MyText(
+              text: desc,
+              fontColor: Colors.grey,
+              fontSize: 12,
+              fontWeight: FontWeight.w500
           ),
           SizedBox(
             height: 7,
