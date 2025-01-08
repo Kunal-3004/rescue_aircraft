@@ -1,10 +1,13 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:rescue_aircraft/screens/searchArea.dart';
 import 'package:rescue_aircraft/utils/constant.dart';
 import 'package:rescue_aircraft/utils/openSkyUser.dart';
 import 'package:rescue_aircraft/widgets/drawer.dart';
+
 import '../widgets/aircraftCard.dart';
+
 class Report extends StatefulWidget {
   const Report({super.key});
 
@@ -16,6 +19,7 @@ class _ReportState extends State<Report> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   List<dynamic> aircraftData = [];
   List<dynamic> filteredAircraftData = [];
+  Map<String, dynamic>? details;
   TextEditingController searchController = TextEditingController();
 
   final String username = Data.username;
@@ -199,39 +203,73 @@ class _ReportState extends State<Report> {
               child: Text("Cancel"),
             ),
             TextButton(
-              onPressed: () {
-                if (callsignController.text.isNotEmpty &&
-                    countryController.text.isNotEmpty &&
-                    timeController.text.isNotEmpty &&
-                    lastContactController.text.isNotEmpty &&
-                    latitudeController.text.isNotEmpty &&
-                    longitudeController.text.isNotEmpty &&
-                    altitudeController.text.isNotEmpty &&
-                    velocityController.text.isNotEmpty &&
-                    directionController.text.isNotEmpty &&
-                    verticalRateController.text.isNotEmpty &&
-                    categoryController.text.isNotEmpty) {
+              onPressed: () async {
+                print("Add Report Button Pressed");
+                setState(() {
+                  if (callsignController.text.isNotEmpty &&
+                      countryController.text.isNotEmpty &&
+                      timeController.text.isNotEmpty &&
+                      lastContactController.text.isNotEmpty &&
+                      latitudeController.text.isNotEmpty &&
+                      longitudeController.text.isNotEmpty &&
+                      altitudeController.text.isNotEmpty &&
+                      velocityController.text.isNotEmpty &&
+                      directionController.text.isNotEmpty &&
+                      verticalRateController.text.isNotEmpty &&
+                      categoryController.text.isNotEmpty) {
 
-                  final newAircraft = [
-                    callsignController.text,
-                    countryController.text,
-                    timeController.text,
-                    lastContactController.text,
-                    latitudeController.text,
-                    longitudeController.text,
-                    altitudeController.text,
-                    velocityController.text,
-                    directionController.text,
-                    verticalRateController.text,
-                    categoryController.text,
-                  ];
-                  Navigator.pop(context);
+                    details = {
+                      'callsign': callsignController.text,
+                      'origin_country': countryController.text,
+                      'time_position': timeController.text,
+                      'last_contact': lastContactController.text,
+                      'latitude': double.tryParse(latitudeController.text) ?? 0.0,
+                      'longitude': double.tryParse(longitudeController.text) ?? 0.0,
+                      'geo_altitude': double.tryParse(altitudeController.text) ?? 0.0,
+                      'velocity': double.tryParse(velocityController.text) ?? 0.0,
+                      'heading': double.tryParse(directionController.text) ?? 0.0,
+                      'vertical_rate': double.tryParse(verticalRateController.text) ?? 0.0,
+                      'category': categoryController.text,
+                      'crashLocation': {'latitude': 0.0, 'longitude': 0.0},
+                    };
+                  }
+                });
+                print("Fetching crash location...");
+                await fetchCrashLocation();
 
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text("Please fill in all fields")),
-                  );
+                print("Crash location fetched: ${details!['crashLocation']}");
+
+                if (details != null && details!['crashLocation'] == null) {
+                  details!['crashLocation'] = {
+                    'latitude': 0.0,
+                    'longitude': 0.0,
+                  };
                 }
+
+                List<List<dynamic>> aircraft = [
+                  [
+                    details!['callsign'],
+                    details!['origin_country'],
+                    details!['time_position'],
+                    details!['last_contact'],
+                    details!['latitude'],
+                    details!['longitude'],
+                    details!['geo_altitude'],
+                    details!['velocity'],
+                    details!['heading'],
+                    details!['vertical_rate'],
+                    details!['category'],
+                    details!['crashLocation'] ?? {'latitude': 0.0, 'longitude': 0.0},
+                  ]
+                ];
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => SearchArea(aircraftData: aircraft),
+                  ),
+                ).then((_) {
+                  Navigator.pop(context);
+                });
               },
               child: Text("Add Report"),
             ),
@@ -241,6 +279,51 @@ class _ReportState extends State<Report> {
     );
   }
 
+  Future<void> fetchCrashLocation() async {
+    if (details != null) {
+      double latitude = details!['latitude'] ?? 0.0;
+      double longitude = details!['longitude'] ?? 0.0;
+      double heading = details!['heading'] ?? 0.0;
+      double altitude = details!['geo_altitude'] ?? 0.0;
+      double velocity = details!['velocity'] ?? 0.0;
+
+      final url = Uri.parse(Utils.calLatLngApi);
+
+      try {
+        final response = await http.post(
+          url,
+          headers: {'Content-Type': 'application/json'},
+          body: json.encode({
+            'latitude': latitude,
+            'longitude': longitude,
+            'heading': heading,
+            'altitude': altitude,
+            'velocity': velocity,
+          }),
+        );
+        print("API request completed. Status code: ${response.statusCode}");
+        if (response.statusCode == 200) {
+          final data = json.decode(response.body);
+          double crashLatitude = data['expectedCoordinates']['latitude'];
+          double crashLongitude = data['expectedCoordinates']['longitude'];
+
+          setState(() {
+            details!['crashLocation'] = {
+              'latitude': crashLatitude,
+              'longitude': crashLongitude,
+            };
+          });
+          print('Crash Location: Latitude = $crashLatitude, Longitude = $crashLongitude');
+        } else {
+          print('Failed to fetch crash location. Status code: ${response.statusCode}');
+        }
+      } catch (e) {
+        print('Error fetching crash location: $e');
+      }
+    } else {
+      print('Aircraft details not available for crash location calculation');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -255,11 +338,7 @@ class _ReportState extends State<Report> {
               child: Row(
                 children: [
                   IconButton(
-                    icon: Icon(
-                        Icons.menu,
-                        color: Colors.black,
-                        size: 40
-                    ),
+                    icon: Icon(Icons.menu, color: Colors.black, size: 40),
                     onPressed: () {
                       _scaffoldKey.currentState?.openDrawer();
                     },
@@ -284,11 +363,7 @@ class _ReportState extends State<Report> {
                   ),
                   const SizedBox(width: 8.0),
                   IconButton(
-                    icon: Icon(
-                        Icons.add_circle_outline,
-                        color: Colors.black,
-                        size: 40
-                    ),
+                    icon: Icon(Icons.add_circle_outline, color: Colors.black, size: 40),
                     onPressed: () {
                       _showAddReportDialog();
                     },
@@ -298,11 +373,7 @@ class _ReportState extends State<Report> {
             ),
             Expanded(
               child: filteredAircraftData.isEmpty
-                  ? Center(
-                child: CircularProgressIndicator(
-                  color: Colors.blueAccent,
-                ),
-              )
+                  ? Center(child: CircularProgressIndicator(color: Colors.blueAccent))
                   : ListView.builder(
                 itemCount: filteredAircraftData.length,
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),

@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:rescue_aircraft/screens/report.dart';
 import 'package:rescue_aircraft/screens/searchArea.dart';
 import 'package:rescue_aircraft/utils/constant.dart';
+import 'package:rescue_aircraft/utils/gradient.dart';
 import 'package:rescue_aircraft/utils/openSkyUser.dart';
 import 'package:rescue_aircraft/widgets/text.dart';
 import '../widgets/aircraftCategory.dart';
@@ -163,15 +164,7 @@ class _AircraftDetailScreenState extends State<AircraftDetailScreen> {
           Container(
             height: 60,
             decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Color(0xff87ceeb),
-                  Color(0xff00bfff),
-                  Color(0xff4682b4),
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.topRight,
-              ),
+              gradient: kBlueGradient,
               borderRadius: BorderRadius.circular(20),
             ),
             width: MediaQuery.of(context).size.width/2,
