@@ -9,7 +9,7 @@ sealed class TempEvent extends Equatable {
   List<Object> get props => [];
 }
 
-//^ All Events are defined as classes that extend TempEvent and are immutable.
+//^ All Events are defined as classes that extend TempEvent and are immutable
 
 final class UpdateTemperature extends TempEvent {
   final double temperature;
