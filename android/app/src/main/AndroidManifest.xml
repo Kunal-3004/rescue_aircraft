@@ -1,4 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+
     <application
         android:label="rescue_aircraft"
         android:name="${applicationName}"
@@ -30,6 +33,19 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="f17738a0a31f4bffbe938d304c5f253e"/>
+
+        <meta-data
+            android:name="io.flutter.embedding.android.SurfaceView"
+            android:value="true" />
+        <meta-data
+            android:name="com.google.android.gms.maps.useTextureView"
+            android:value="true" />
+
+
+
     </application>
     <!-- Required to query activities that can process text, see:
          https://developer.android.com/training/package-visibility and

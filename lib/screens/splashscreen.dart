@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:rescue_aircraft/screens/login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'home.dart';
+
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -20,13 +22,12 @@ class _SplashScreenState extends State<SplashScreen> {
 
   void isLogin() async {
     _sharedPreferences = await SharedPreferences.getInstance();
+    bool? isLoggedIn = _sharedPreferences.getBool('isLoggedIn');
 
-    if (_sharedPreferences.getString('userid') == null &&
-        _sharedPreferences.getString('usermail') == null) {
-       Navigator.push(context, MaterialPageRoute(builder: (context) => SignIn()));
+    if (isLoggedIn==true) {
+       Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
     } else {
-      // Navigate to Home Screen
-      // Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen()));
+       Navigator.push(context, MaterialPageRoute(builder: (context) => SignIn()));
     }
   }
 
@@ -35,7 +36,6 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
       body: Stack(
         children: [
-          // Full-screen image
           SizedBox(
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
@@ -44,7 +44,6 @@ class _SplashScreenState extends State<SplashScreen> {
               fit: BoxFit.cover,
             ),
           ),
-          // Text positioned at the bottom
           Align(
             alignment: Alignment.bottomCenter,
             child: Padding(

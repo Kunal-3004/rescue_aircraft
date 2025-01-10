@@ -1,9 +1,10 @@
-const app=require('./api/app');
-const db=require('./api/config/db')
+const app=require('./app');
+const db=require('./config/db')
 const cors = require('cors');
-const UserModel=require('./api/model/user_model')
+const UserModel=require('./model/user_model');
+const coordinates=require('./coordinates');
 
-const port=4001;
+const port=4000;
 
 app.get('/',(req,res)=>{
     res.send("Hello World!!!")
@@ -12,5 +13,5 @@ app.get('/',(req,res)=>{
 app.use(cors());
 
 app.listen(port,()=>{
-    console.log('Server listening on port http://localhost:4001');
+    console.log('Server listening on port http://localhost:4000');
 });
