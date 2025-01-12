@@ -45,7 +45,8 @@ dev_dependencies:
   http: null
   intl: null
   provider: null
-  shared_preferences: null
+  shared_preferences:
+  dartz:
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
